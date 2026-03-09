@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import distBg from '../assets/distributor/dist.jpg';
@@ -31,28 +31,14 @@ const BRAND_LIGHT = '#f6e8db';
 
 export default function Distributor() {
   const { t } = useLanguage();
-
   const [activeTab, setActiveTab] = useState<Tab>('find');
   const [searchQuery, setSearchQuery] = useState('');
   const [form, setForm] = useState<FormData>(initialForm);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const validate = (): boolean => {
     const newErrors: Partial<FormData> = {};
-
     if (!form.companyName.trim()) newErrors.companyName = t.distributor.required;
     if (!form.contact.trim()) newErrors.contact = t.distributor.required;
     if (!form.email.trim()) newErrors.email = t.distributor.required;
@@ -66,11 +52,9 @@ export default function Distributor() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (validate()) {
       setSubmitted(true);
       setForm(initialForm);
-      setErrors({});
     }
   };
 
@@ -112,13 +96,12 @@ export default function Distributor() {
 
       {/* Section */}
       <section
-        className="relative min-h-[70vh] sm:min-h-screen flex items-center justify-center py-16 sm:py-20 px-4"
+        className="relative min-h-screen flex items-center justify-center py-20 px-4"
         style={{
           backgroundImage: `url(${distBg})`,
-          backgroundSize: isMobile ? 'auto 100%' : 'cover',
-          backgroundPosition: isMobile ? 'center top' : 'center center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-black/25" />
@@ -126,7 +109,7 @@ export default function Distributor() {
         <div className="relative z-10 w-full max-w-4xl">
           {activeTab === 'find' && (
             <div
-              className="rounded-3xl p-8 sm:p-14 shadow-2xl"
+              className="rounded-3xl p-10 sm:p-14 shadow-2xl"
               style={{
                 background: 'rgba(255,255,255,0.9)',
                 backdropFilter: 'blur(16px)',
@@ -167,7 +150,7 @@ export default function Distributor() {
 
           {activeTab === 'become' && (
             <div
-              className="rounded-3xl p-8 sm:p-14 shadow-2xl"
+              className="rounded-3xl p-10 sm:p-14 shadow-2xl"
               style={{
                 background: 'rgba(255,255,255,0.92)',
                 backdropFilter: 'blur(18px)',
@@ -197,12 +180,7 @@ export default function Distributor() {
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
 
@@ -215,136 +193,93 @@ export default function Distributor() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <input
-                        type="text"
-                        placeholder={t.distributor.companyName}
-                        value={form.companyName}
-                        onChange={(e) => setForm({ ...form, companyName: e.target.value })}
-                        className={inputClass('companyName')}
-                        style={!errors.companyName ? { boxShadow: 'none' } : undefined}
-                        onFocus={(e) => {
-                          if (!errors.companyName) {
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!errors.companyName) e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                      {errors.companyName && (
-                        <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder={t.distributor.contactPerson}
-                        value={form.contact}
-                        onChange={(e) => setForm({ ...form, contact: e.target.value })}
-                        className={inputClass('contact')}
-                        style={!errors.contact ? { boxShadow: 'none' } : undefined}
-                        onFocus={(e) => {
-                          if (!errors.contact) {
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!errors.contact) e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                      {errors.contact && (
-                        <p className="text-red-500 text-xs mt-1">{errors.contact}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <input
-                        type="email"
-                        placeholder={t.distributor.email}
-                        value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className={inputClass('email')}
-                        style={!errors.email ? { boxShadow: 'none' } : undefined}
-                        onFocus={(e) => {
-                          if (!errors.email) {
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!errors.email) e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                      {errors.email && (
-                        <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                      )}
-                    </div>
+                    <input
+                      type="text"
+                      placeholder={t.distributor.companyName}
+                      value={form.companyName}
+                      onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+                      className={inputClass('companyName')}
+                      style={!errors.companyName ? { boxShadow: 'none' } : undefined}
+                      onFocus={(e) => {
+                        if (!errors.companyName) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      }}
+                      onBlur={(e) => {
+                        if (!errors.companyName) e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder={t.distributor.contactPerson}
+                      value={form.contact}
+                      onChange={(e) => setForm({ ...form, contact: e.target.value })}
+                      className={inputClass('contact')}
+                      style={!errors.contact ? { boxShadow: 'none' } : undefined}
+                      onFocus={(e) => {
+                        if (!errors.contact) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      }}
+                      onBlur={(e) => {
+                        if (!errors.contact) e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
+                    <input
+                      type="email"
+                      placeholder={t.distributor.email}
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      className={inputClass('email')}
+                      style={!errors.email ? { boxShadow: 'none' } : undefined}
+                      onFocus={(e) => {
+                        if (!errors.email) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      }}
+                      onBlur={(e) => {
+                        if (!errors.email) e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <input
-                        type="tel"
-                        placeholder={t.distributor.phone}
-                        value={form.phone}
-                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className={inputClass('phone')}
-                        style={!errors.phone ? { boxShadow: 'none' } : undefined}
-                        onFocus={(e) => {
-                          if (!errors.phone) {
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!errors.phone) e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                      {errors.phone && (
-                        <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder={t.distributor.country}
-                        value={form.country}
-                        onChange={(e) => setForm({ ...form, country: e.target.value })}
-                        className={inputClass('country')}
-                        style={!errors.country ? { boxShadow: 'none' } : undefined}
-                        onFocus={(e) => {
-                          if (!errors.country) {
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!errors.country) e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                      {errors.country && (
-                        <p className="text-red-500 text-xs mt-1">{errors.country}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder={t.distributor.region}
-                        value={form.region}
-                        onChange={(e) => setForm({ ...form, region: e.target.value })}
-                        className={inputClass('region')}
-                        style={!errors.region ? { boxShadow: 'none' } : undefined}
-                        onFocus={(e) => {
-                          if (!errors.region) {
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!errors.region) e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      />
-                    </div>
+                    <input
+                      type="tel"
+                      placeholder={t.distributor.phone}
+                      value={form.phone}
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      className={inputClass('phone')}
+                      style={!errors.phone ? { boxShadow: 'none' } : undefined}
+                      onFocus={(e) => {
+                        if (!errors.phone) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      }}
+                      onBlur={(e) => {
+                        if (!errors.phone) e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder={t.distributor.country}
+                      value={form.country}
+                      onChange={(e) => setForm({ ...form, country: e.target.value })}
+                      className={inputClass('country')}
+                      style={!errors.country ? { boxShadow: 'none' } : undefined}
+                      onFocus={(e) => {
+                        if (!errors.country) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      }}
+                      onBlur={(e) => {
+                        if (!errors.country) e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder={t.distributor.region}
+                      value={form.region}
+                      onChange={(e) => setForm({ ...form, region: e.target.value })}
+                      className={inputClass('region')}
+                      style={!errors.region ? { boxShadow: 'none' } : undefined}
+                      onFocus={(e) => {
+                        if (!errors.region) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      }}
+                      onBlur={(e) => {
+                        if (!errors.region) e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
                   </div>
 
                   <textarea
@@ -355,7 +290,7 @@ export default function Distributor() {
                     className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-sm focus:outline-none resize-none"
                     style={{ boxShadow: 'none' }}
                     onFocus={(e) => {
-                      e.currentTarget.style.boxShadow = '0 0 0 4px rgba(133,84,38,0.18)';
+                      e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
                     }}
                     onBlur={(e) => {
                       e.currentTarget.style.boxShadow = 'none';
@@ -366,12 +301,8 @@ export default function Distributor() {
                     type="submit"
                     className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-200"
                     style={{ backgroundColor: BRAND }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = BRAND_DARK;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = BRAND;
-                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BRAND_DARK)}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = BRAND)}
                   >
                     {t.distributor.submitBtn}
                   </button>
