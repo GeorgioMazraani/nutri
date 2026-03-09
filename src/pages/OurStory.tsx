@@ -212,19 +212,19 @@ export default function OurStory({ onNavigate }: OurStoryProps) {
 
       {/* ================= IMAGE FULL-WIDTH ================= */}
       <FullBleed className="bg-white">
-        <div className="relative h-[260px] sm:h-[340px] lg:h-[400px] overflow-hidden">
-          <img
-            src={story2}
-            alt="Our impact"
-            className="w-full h-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-            draggable={false}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/20" />
-          <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(0,0,0,0.20)]" />
-        </div>
-      </FullBleed>
+  <div className="relative h-[300px] sm:h-[380px] lg:h-[460px] overflow-hidden">
+    <img
+      src={story2}
+      alt="Our impact"
+      className="w-full h-full object-cover object-center"
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+    />
+    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/20" />
+    <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(0,0,0,0.20)]" />
+  </div>
+</FullBleed>
 
       {/* ================= p5 + p6 ================= */}
       <FullBleed className="bg-white">

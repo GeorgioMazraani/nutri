@@ -22,7 +22,7 @@ export default function HeroShell({
         style={{
           backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center 30%',
         }}
       >
         <div className="absolute inset-0" style={{ backgroundColor: overlayTint }} />
