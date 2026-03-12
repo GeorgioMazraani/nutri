@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import emailjs from '@emailjs/browser';
 
 interface ContactForm {
   name: string;
@@ -28,6 +29,7 @@ export default function ContactUs() {
   const [form, setForm] = useState<ContactForm>(initialForm);
   const [errors, setErrors] = useState<Partial<ContactForm>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const contactInfo = [
     {
@@ -52,40 +54,48 @@ export default function ContactUs() {
 
   const validate = (): boolean => {
     const newErrors: Partial<ContactForm> = {};
+
     if (!form.name.trim()) newErrors.name = t.contact.required;
     if (!form.email.trim()) newErrors.email = t.contact.required;
-    else if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = t.contact.invalidEmail;
+    else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      newErrors.email = t.contact.invalidEmail;
+    }
     if (!form.message.trim()) newErrors.message = t.contact.required;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!validate()) return;
+    if (!validate()) return;
 
-  try {
-    const response = await fetch("https://formspree.io/f/xkoqbjln", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      setLoading(true);
 
-    if (response.ok) {
+      await emailjs.send(
+        'service_sjgva2p',
+        'template_sf81n4p',
+        {
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          subject: form.subject,
+          message: form.message,
+        },
+        'lgKSYIxxuwmt9gYEA'
+      );
+
       setSubmitted(true);
       setForm(initialForm);
-    } else {
-      console.error("Form submission failed");
+      setErrors({});
+    } catch (error) {
+      console.error('Email failed:', error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+  };
 
   const inputClass = (field: keyof ContactForm) =>
     `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
@@ -98,7 +108,6 @@ export default function ContactUs() {
     <section className="py-20" style={{ backgroundColor: SECTION_BG }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* LEFT SIDE */}
           <div>
             <h1
               className="text-4xl font-extrabold mb-10 text-center lg:text-left"
@@ -121,8 +130,12 @@ export default function ContactUs() {
                   key={info.label}
                   className="rounded-2xl p-6 flex gap-4 shadow-md transition-all duration-200"
                   style={{ backgroundColor: BRAND }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BRAND_DARK)}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = BRAND)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = BRAND_DARK;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = BRAND;
+                  }}
                 >
                   <div className="w-11 h-11 bg-white/20 rounded-full flex items-center justify-center shrink-0">
                     {info.icon}
@@ -140,7 +153,6 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* RIGHT SIDE FORM */}
           <div
             className="rounded-3xl p-8 sm:p-12 shadow-2xl"
             style={{
@@ -165,7 +177,12 @@ export default function ContactUs() {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 </div>
 
@@ -187,7 +204,10 @@ export default function ContactUs() {
                   className={inputClass('name')}
                   style={!errors.name ? { boxShadow: 'none' } : undefined}
                   onFocus={(e) => {
-                    if (!errors.name) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                    if (!errors.name) {
+                      e.currentTarget.style.boxShadow =
+                        '0 0 0 4px rgba(133,84,38,0.18)';
+                    }
                   }}
                   onBlur={(e) => {
                     if (!errors.name) e.currentTarget.style.boxShadow = 'none';
@@ -202,7 +222,10 @@ export default function ContactUs() {
                   className={inputClass('email')}
                   style={!errors.email ? { boxShadow: 'none' } : undefined}
                   onFocus={(e) => {
-                    if (!errors.email) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                    if (!errors.email) {
+                      e.currentTarget.style.boxShadow =
+                        '0 0 0 4px rgba(133,84,38,0.18)';
+                    }
                   }}
                   onBlur={(e) => {
                     if (!errors.email) e.currentTarget.style.boxShadow = 'none';
@@ -218,12 +241,16 @@ export default function ContactUs() {
                     className={inputClass('phone')}
                     style={!errors.phone ? { boxShadow: 'none' } : undefined}
                     onFocus={(e) => {
-                      if (!errors.phone) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      if (!errors.phone) {
+                        e.currentTarget.style.boxShadow =
+                          '0 0 0 4px rgba(133,84,38,0.18)';
+                      }
                     }}
                     onBlur={(e) => {
                       if (!errors.phone) e.currentTarget.style.boxShadow = 'none';
                     }}
                   />
+
                   <input
                     type="text"
                     placeholder={t.contact.subjectPlaceholder}
@@ -232,7 +259,10 @@ export default function ContactUs() {
                     className={inputClass('subject')}
                     style={!errors.subject ? { boxShadow: 'none' } : undefined}
                     onFocus={(e) => {
-                      if (!errors.subject) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                      if (!errors.subject) {
+                        e.currentTarget.style.boxShadow =
+                          '0 0 0 4px rgba(133,84,38,0.18)';
+                      }
                     }}
                     onBlur={(e) => {
                       if (!errors.subject) e.currentTarget.style.boxShadow = 'none';
@@ -246,11 +276,16 @@ export default function ContactUs() {
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className={`w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none transition-all resize-none ${
-                    errors.message ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'
+                    errors.message
+                      ? 'border-red-400 bg-red-50'
+                      : 'border-gray-200 bg-white'
                   }`}
                   style={!errors.message ? { boxShadow: 'none' } : undefined}
                   onFocus={(e) => {
-                    if (!errors.message) e.currentTarget.style.boxShadow = `0 0 0 4px rgba(133,84,38,0.18)`;
+                    if (!errors.message) {
+                      e.currentTarget.style.boxShadow =
+                        '0 0 0 4px rgba(133,84,38,0.18)';
+                    }
                   }}
                   onBlur={(e) => {
                     if (!errors.message) e.currentTarget.style.boxShadow = 'none';
@@ -259,12 +294,17 @@ export default function ContactUs() {
 
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-200"
+                  disabled={loading}
+                  className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
                   style={{ backgroundColor: BRAND }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BRAND_DARK)}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = BRAND)}
+                  onMouseEnter={(e) => {
+                    if (!loading) e.currentTarget.style.backgroundColor = BRAND_DARK;
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!loading) e.currentTarget.style.backgroundColor = BRAND;
+                  }}
                 >
-                  {t.contact.sendBtn}
+                  {loading ? 'Sending...' : t.contact.sendBtn}
                 </button>
 
                 <p className="text-gray-500 text-xs text-center">
