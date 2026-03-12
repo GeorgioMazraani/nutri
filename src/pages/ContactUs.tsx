@@ -74,9 +74,10 @@ export default function ContactUs() {
     try {
       setLoading(true);
 
+      // 1️⃣ SEND EMAIL TO YOU
       await emailjs.send(
-        'service_sjgva2p',
-        'template_sf81n4p',
+        "service_sjgva2p",
+        "template_sf81n4p",
         {
           name: form.name,
           email: form.email,
@@ -84,24 +85,36 @@ export default function ContactUs() {
           subject: form.subject,
           message: form.message,
         },
-        'lgKSYIxxuwmt9gYEA'
+        "lgKSYIxxuwmt9gYEA"
+      );
+
+      // 2️⃣ AUTO REPLY TO USER
+      await emailjs.send(
+        "service_sjgva2p",
+        "template_hp8x7gq", // <-- your auto reply template id
+        {
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        },
+        "lgKSYIxxuwmt9gYEA"
       );
 
       setSubmitted(true);
       setForm(initialForm);
       setErrors({});
     } catch (error) {
-      console.error('Email failed:', error);
+      console.error("Email failed:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const inputClass = (field: keyof ContactForm) =>
-    `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
-      errors[field]
-        ? 'border-red-400 bg-red-50 focus:ring-red-200'
-        : 'border-gray-200 bg-white'
+    `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors[field]
+      ? 'border-red-400 bg-red-50 focus:ring-red-200'
+      : 'border-gray-200 bg-white'
     }`;
 
   return (
@@ -275,11 +288,10 @@ export default function ContactUs() {
                   placeholder={t.contact.messagePlaceholder}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className={`w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none transition-all resize-none ${
-                    errors.message
+                  className={`w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none transition-all resize-none ${errors.message
                       ? 'border-red-400 bg-red-50'
                       : 'border-gray-200 bg-white'
-                  }`}
+                    }`}
                   style={!errors.message ? { boxShadow: 'none' } : undefined}
                   onFocus={(e) => {
                     if (!errors.message) {
@@ -295,7 +307,7 @@ export default function ContactUs() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full py-4 rounded-xl font-semibold text-white flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
                   style={{ backgroundColor: BRAND }}
                   onMouseEnter={(e) => {
                     if (!loading) e.currentTarget.style.backgroundColor = BRAND_DARK;
@@ -304,7 +316,34 @@ export default function ContactUs() {
                     if (!loading) e.currentTarget.style.backgroundColor = BRAND;
                   }}
                 >
-                  {loading ? 'Sending...' : t.contact.sendBtn}
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+
+                      Sending...
+                    </>
+                  ) : (
+                    t.contact.sendBtn
+                  )}
                 </button>
 
                 <p className="text-gray-500 text-xs text-center">
