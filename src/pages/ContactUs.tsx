@@ -74,32 +74,30 @@ export default function ContactUs() {
     try {
       setLoading(true);
 
-      // 1️⃣ SEND EMAIL TO YOU
-      await emailjs.send(
-        "service_sjgva2p",
-        "template_sf81n4p",
-        {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          subject: form.subject,
-          message: form.message,
-        },
-        "lgKSYIxxuwmt9gYEA"
-      );
+     await emailjs.send(
+  import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT,
+  {
+    name: form.name,
+    email: form.email,
+    phone: form.phone,
+    subject: form.subject,
+    message: form.message,
+  },
+  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+);
 
-      // 2️⃣ AUTO REPLY TO USER
       await emailjs.send(
-        "service_sjgva2p",
-        "template_hp8x7gq", // <-- your auto reply template id
-        {
-          name: form.name,
-          email: form.email,
-          subject: form.subject,
-          message: form.message,
-        },
-        "lgKSYIxxuwmt9gYEA"
-      );
+  import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  import.meta.env.VITE_EMAILJS_TEMPLATE_AUTOREPLY,
+  {
+    name: form.name,
+    email: form.email,
+    subject: form.subject,
+    message: form.message,
+  },
+  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+);
 
       setSubmitted(true);
       setForm(initialForm);
