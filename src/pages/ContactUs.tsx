@@ -61,13 +61,31 @@ export default function ContactUs() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!validate()) return;
+
+  try {
+    const response = await fetch("https://formspree.io/f/xkoqbjln", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+
+    if (response.ok) {
       setSubmitted(true);
       setForm(initialForm);
+    } else {
+      console.error("Form submission failed");
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const inputClass = (field: keyof ContactForm) =>
     `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
