@@ -31,26 +31,26 @@ export default function ContactUs() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-const contactInfo = [
-  {
-    icon: <Mail size={20} className="text-white" />,
-    label: t.contact.emailLabel,
-    value: 'info@astra-universal.com',
-    sub: t.contact.emailReply,
-  },
-  {
-    icon: <Phone size={20} className="text-white" />,
-    label: t.contact.phoneLabel,
-    value: '+961 76 474711',
-    sub: '+971 58 6803800',
-  },
-  {
-    icon: <MapPin size={20} className="text-white" />,
-    label: t.contact.officeLabel,
-    value: t.contact.officeValue,
-    sub: t.contact.officeSub,
-  },
-];
+  const contactInfo = [
+    {
+      icon: <Mail size={20} className="text-white" />,
+      label: t.contact.emailLabel,
+      value: 'info@astra-universal.com',
+      sub: t.contact.emailReply,
+    },
+    {
+      icon: <Phone size={20} className="text-white" />,
+      label: t.contact.phoneLabel,
+      value: '+961 76 474711',
+      sub: '+971 58 6803800',
+    },
+    {
+      icon: <MapPin size={20} className="text-white" />,
+      label: t.contact.officeLabel,
+      value: t.contact.officeValue,
+      sub: t.contact.officeSub,
+    },
+  ];
 
   const validate = (): boolean => {
     const newErrors: Partial<ContactForm> = {};
@@ -67,14 +67,14 @@ const contactInfo = [
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validate()) return;
+    if (!validate()) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const message = `
+      const message = `
 This message was submitted through the Contact Us form on the website.
 
 Name: ${form.name}
@@ -84,35 +84,36 @@ Subject: ${form.subject || 'N/A'}
 
 Message:
 ${form.message}
-    `.trim();
+      `.trim();
 
-    await emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT,
-      {
-        name: form.name,
-        email: form.email,
-        phone: form.phone || 'N/A',
-        subject: form.subject || 'New Contact Message',
-        message,
-      },
-      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    );
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT,
+        {
+          name: form.name,
+          email: form.email,
+          phone: form.phone || 'N/A',
+          subject: form.subject || 'New Contact Message',
+          message,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
 
-    setSubmitted(true);
-    setForm(initialForm);
-    setErrors({});
-  } catch (error) {
-    console.error('Email failed:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+      setSubmitted(true);
+      setForm(initialForm);
+      setErrors({});
+    } catch (error) {
+      console.error('Email failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const inputClass = (field: keyof ContactForm) =>
-    `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors[field]
-      ? 'border-red-400 bg-red-50 focus:ring-red-200'
-      : 'border-gray-200 bg-white'
+    `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
+      errors[field]
+        ? 'border-red-400 bg-red-50 focus:ring-red-200'
+        : 'border-gray-200 bg-white'
     }`;
 
   return (
@@ -204,6 +205,21 @@ ${form.message}
                 <p className="text-gray-600 text-sm max-w-sm mx-auto">
                   {t.contact.successText}
                 </p>
+
+                <button
+                  type="button"
+                  onClick={() => setSubmitted(false)}
+                  className="mt-6 px-6 py-3 rounded-xl font-semibold transition-all duration-200"
+                  style={{ backgroundColor: BRAND, color: 'white' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = BRAND_DARK;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = BRAND;
+                  }}
+                >
+                  {t.contact.sendAnother}
+                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -286,10 +302,9 @@ ${form.message}
                   placeholder={t.contact.messagePlaceholder}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className={`w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none transition-all resize-none ${errors.message
-                      ? 'border-red-400 bg-red-50'
-                      : 'border-gray-200 bg-white'
-                    }`}
+                  className={`w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none transition-all resize-none ${
+                    errors.message ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'
+                  }`}
                   style={!errors.message ? { boxShadow: 'none' } : undefined}
                   onFocus={(e) => {
                     if (!errors.message) {
@@ -336,7 +351,6 @@ ${form.message}
                           d="M4 12a8 8 0 018-8v8H4z"
                         ></path>
                       </svg>
-
                       Sending...
                     </>
                   ) : (

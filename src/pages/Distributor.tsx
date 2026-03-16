@@ -230,6 +230,21 @@ Additional Info: ${form.info || 'N/A'}
                   </h3>
 
                   <p className="text-gray-600 text-sm">{t.distributor.successText}</p>
+
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="mt-6 px-6 py-3 rounded-xl font-semibold transition-all duration-200"
+                    style={{ backgroundColor: BRAND, color: 'white' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = BRAND_DARK;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = BRAND;
+                    }}
+                  >
+                    {t.distributor.submitAnother}
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
