@@ -67,35 +67,47 @@ const contactInfo = [
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validate()) return;
+  if (!validate()) return;
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-     await emailjs.send(
-  import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT,
-  {
-    name: form.name,
-    email: form.email,
-    phone: form.phone,
-    subject: form.subject,
-    message: form.message,
-  },
-  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-);
+    const message = `
+This message was submitted through the Contact Us form on the website.
 
-      setSubmitted(true);
-      setForm(initialForm);
-      setErrors({});
-    } catch (error) {
-      console.error("Email failed:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+Name: ${form.name}
+Email: ${form.email}
+Phone: ${form.phone || 'N/A'}
+Subject: ${form.subject || 'N/A'}
+
+Message:
+${form.message}
+    `.trim();
+
+    await emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT,
+      {
+        name: form.name,
+        email: form.email,
+        phone: form.phone || 'N/A',
+        subject: form.subject || 'New Contact Message',
+        message,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
+
+    setSubmitted(true);
+    setForm(initialForm);
+    setErrors({});
+  } catch (error) {
+    console.error('Email failed:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const inputClass = (field: keyof ContactForm) =>
     `w-full px-4 py-3 border rounded-xl text-gray-700 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${errors[field]
