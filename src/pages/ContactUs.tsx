@@ -31,26 +31,26 @@ export default function ContactUs() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const contactInfo = [
-    {
-      icon: <Mail size={20} className="text-white" />,
-      label: t.contact.emailLabel,
-      value: 'info@Nutri.com',
-      sub: t.contact.emailReply,
-    },
-    {
-      icon: <Phone size={20} className="text-white" />,
-      label: t.contact.phoneLabel,
-      value: '+1 (800) 000-0000',
-      sub: t.contact.phoneSub,
-    },
-    {
-      icon: <MapPin size={20} className="text-white" />,
-      label: t.contact.officeLabel,
-      value: t.contact.officeValue,
-      sub: t.contact.officeSub,
-    },
-  ];
+const contactInfo = [
+  {
+    icon: <Mail size={20} className="text-white" />,
+    label: t.contact.emailLabel,
+    value: 'info@astra-universal.com',
+    sub: t.contact.emailReply,
+  },
+  {
+    icon: <Phone size={20} className="text-white" />,
+    label: t.contact.phoneLabel,
+    value: '+961 76 474711',
+    sub: '+971 58 6803800',
+  },
+  {
+    icon: <MapPin size={20} className="text-white" />,
+    label: t.contact.officeLabel,
+    value: t.contact.officeValue,
+    sub: t.contact.officeSub,
+  },
+];
 
   const validate = (): boolean => {
     const newErrors: Partial<ContactForm> = {};

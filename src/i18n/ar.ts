@@ -282,7 +282,7 @@ const ar: Translations = {
     emailLabel: 'البريد الإلكتروني',
     phoneLabel: 'الهاتف',
     officeLabel: 'المكتب',
-    officeValue: 'المقر الرئيسي العالمي',
+    officeValue: 'شارع فينيسيا، بناية مينا 365، الطابق السابع، مكتب رقم 705.',
     officeSub: 'متاح عند الطلب',
     hoursLabel: 'ساعات العمل',
     hoursValue: 'من الإثنين إلى الجمعة',
@@ -323,7 +323,7 @@ const ar: Translations = {
         },
         {
           heading: 'اتصل بنا',
-          body: 'إذا كانت لديك أي أسئلة حول سياسة الخصوصية هذه، يرجى التواصل معنا عبر info@nutri.com.',
+          body: 'إذا كانت لديك أي أسئلة حول سياسة الخصوصية هذه، يرجى التواصل معنا عبر info@astra-universal.com.',
         },
       ],
     },

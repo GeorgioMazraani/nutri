@@ -29,11 +29,15 @@ export default function Footer({ onNavigate }: FooterProps) {
             <div className="mt-6 space-y-3">
               <div className="flex items-center gap-3 text-white/85 text-sm">
                 <Mail size={16} />
-                <span>info@Nutri.com</span>
+                <span>info@astra-universal.com</span>
               </div>
-              <div className="flex items-center gap-3 text-white/85 text-sm">
-                <Phone size={16} />
-                <span>+1 (800) 000-0000</span>
+
+              <div className="flex items-start gap-3 text-white/85 text-sm">
+                <Phone size={16} className="mt-0.5 shrink-0" />
+                <div className="flex flex-col">
+                  <span>+961 76 474711</span>
+                  <span>+971 58 6803800</span>
+                </div>
               </div>
             </div>
           </div>

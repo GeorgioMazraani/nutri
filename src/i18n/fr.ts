@@ -274,7 +274,7 @@ const fr: Translations = {
     emailLabel: 'E-mail',
     phoneLabel: 'Téléphone',
     officeLabel: 'Bureau',
-    officeValue: 'Siège mondial',
+    officeValue: 'Rue Phoenicia, immeuble Mina 365, 7e étage, bureau n°705.',
     officeSub: 'Disponible sur demande',
     hoursLabel: "Heures d'ouverture",
     hoursValue: 'Du lundi au vendredi',
@@ -315,7 +315,7 @@ const fr: Translations = {
         },
         {
           heading: 'Contactez-nous',
-          body: 'Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à info@nutri.com.',
+          body: 'Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à info@astra-universal.com.',
         },
       ],
     },
